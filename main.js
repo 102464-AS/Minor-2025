@@ -11,6 +11,8 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 1.6, 5);
 
+
+const textureLoader = new THREE.TextureLoader();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -25,11 +27,8 @@ scene.add(ambient, pointLight);
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xd9d9d9 });
 const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc2a475 });
 const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const frameMaterial = new THREE.MeshStandardMaterial({
-  color: 0x888888,
-  metalness: 0.2,
-  roughness: 0.5,
-});
+const doorTexture = textureLoader.load('images/door.png');
+const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: THREE.DoubleSide });
 
 // Corridor segments
 const segmentLength = 10;
@@ -47,18 +46,9 @@ for (let i = 0; i < numSegments; i++) {
   floor.position.set(0, 0, z);
   scene.add(floor);
 
-  // Ceiling
-  const ceiling = new THREE.Mesh(
-    new THREE.PlaneGeometry(4, segmentLength),
-    ceilingMaterial
-  );
-  ceiling.rotation.x = Math.PI / 2;
-  ceiling.position.set(0, 3, z);
-  scene.add(ceiling);
-
   // Left Wall
   const leftWall = new THREE.Mesh(
-    new THREE.PlaneGeometry(3, segmentLength),
+    new THREE.PlaneGeometry(segmentLength, 3),
     wallMaterial
   );
   leftWall.rotation.y = Math.PI / 2;
@@ -67,52 +57,59 @@ for (let i = 0; i < numSegments; i++) {
 
   // Right Wall
   const rightWall = new THREE.Mesh(
-    new THREE.PlaneGeometry(3, segmentLength),
+    new THREE.PlaneGeometry(segmentLength, 3),
     wallMaterial
   );
   rightWall.rotation.y = -Math.PI / 2;
   rightWall.position.set(2, 1.5, z);
   scene.add(rightWall);
 
-  // Door Frame
-  const frameThickness = 0.1;
-  const frameWidth = 4.2;
-  const frameHeight = 3.2;
-  const frameDepth = 0.2;
+  // left side doors
+  if (i % 1 === 0) {
+    const doorGeometry = new THREE.PlaneGeometry(2, 3); 
+    const door = new THREE.Mesh(doorGeometry, doorMaterial);
 
-  const frame = new THREE.Group();
+    door.position.set(-1.9, 1.5, z + segmentLength / 2);
+    door.rotation.y = Math.PI / 2;
 
-  const top = new THREE.Mesh(
-    new THREE.BoxGeometry(frameWidth, frameThickness, frameDepth),
-    frameMaterial
+    scene.add(door);
+  }
+
+  //  right side doors
+  if (i % 1 === 0) {
+    const doorGeometry = new THREE.PlaneGeometry(2, 3); 
+    const door = new THREE.Mesh(doorGeometry, doorMaterial);
+    door.position.set(1.9, 1.5, z + segmentLength / 2);
+    door.rotation.y = -Math.PI / 2;
+    scene.add(door);
+  }
+
+  // Ceiling
+  const ceiling = new THREE.Mesh(
+    new THREE.PlaneGeometry(4, segmentLength),
+    ceilingMaterial
   );
-  top.position.set(0, frameHeight / 2, 0);
-  frame.add(top);
-
-  const bottom = new THREE.Mesh(
-    new THREE.BoxGeometry(frameWidth, frameThickness, frameDepth),
-    frameMaterial
-  );
-  bottom.position.set(0, -frameHeight / 2, 0);
-  frame.add(bottom);
-
-  const left = new THREE.Mesh(
-    new THREE.BoxGeometry(frameThickness, frameHeight, frameDepth),
-    frameMaterial
-  );
-  left.position.set(-frameWidth / 2, 0, 0);
-  frame.add(left);
-
-  const right = new THREE.Mesh(
-    new THREE.BoxGeometry(frameThickness, frameHeight, frameDepth),
-    frameMaterial
-  );
-  right.position.set(frameWidth / 2, 0, 0);
-  frame.add(right);
-
-  frame.position.set(0, 1.5, z - segmentLength / 2);
-  scene.add(frame);
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.position.set(0, 3, z);
+  scene.add(ceiling);
 }
+
+// front wall
+const frontWall = new THREE.Mesh(
+  new THREE.PlaneGeometry(4, 3),
+  wallMaterial
+);
+frontWall.position.set(0, 1.5, segmentLength / 2);
+scene.add(frontWall);
+
+// backwall
+const backWall = new THREE.Mesh(
+  new THREE.PlaneGeometry(4, 3),
+  wallMaterial
+);
+// place the back wall slightly forward so it's closer to the corridor walls/segments
+backWall.position.set(0, 1.5, -numSegments * segmentLength + segmentLength / 2);
+scene.add(backWall);
 
 // Movement controls
 const keys = { w: false, s: false };
