@@ -24,9 +24,12 @@ pointLight.position.set(0, 2, 2);
 scene.add(ambient, pointLight);
 
 // Materials
-const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xd9d9d9 });
+const wallTexture = textureLoader.load('images/wall.jpg');
+// const backroom_wallTexture = textureLoader.load('images/backrooms.png');
+const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture });
 const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc2a475 });
-const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+const ceilingTexture = textureLoader.load('images/ceiling2.jpeg');
+const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
 const doorTexture = textureLoader.load('images/door.png');
 const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: THREE.DoubleSide });
 
@@ -116,6 +119,15 @@ const keys = { w: false, s: false };
 document.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "w") keys.w = true;
   if (e.key.toLowerCase() === "s") keys.s = true;
+  // coliding with back wall
+  if (camera.position.z <= -numSegments * segmentLength + segmentLength -2.9 && keys.w) {
+    keys.w = false;
+  }
+
+  // coliding with front wall
+  if (camera.position.z >= segmentLength / 2 -2.9 && keys.s) {
+    keys.s = false;
+  }
 });
 document.addEventListener("keyup", (e) => {
   if (e.key.toLowerCase() === "w") keys.w = false;
@@ -127,8 +139,8 @@ function animate() {
   requestAnimationFrame(animate);
 
   // Move camera
-  if (keys.w) camera.position.z -= 0.1; // forward
-  if (keys.s) camera.position.z += 0.1; // backward
+  if (keys.w) camera.position.z -= 0.1; 
+  if (keys.s) camera.position.z += 0.1; 
 
   renderer.render(scene, camera);
 }
