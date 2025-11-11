@@ -1,0 +1,170 @@
+/* JA, IK HEB VAR GEBRUIKT, WEET IK. HET WAS DE MANIER DIE IK HEB GEVONDEN DAT WEL NORMAAL WERKTE 🙏*/
+
+/* Voor de zijwanden, plafond en vloer, kan je nog niks duidelijk erop neerzetten. Als het nodig is moet ik daar er even naar kijken. */
+
+.back-button {
+    color: white;
+    border: 5px outset #1a75ff;
+    background-color: #0b1f3a; 
+    font-size: 30px;
+    padding: 6px;
+    cursor: pointer;
+    z-index: 9999;
+    position: fixed;
+    bottom: 0;
+    width: 100px;
+    left: calc(50%- 100px);
+    text-align: center;
+    text-decoration: none;
+    color: white;
+}
+
+:root{
+    --wall: url(../images/10637-NMQKXB.jpg);    /* De kleur van de zijwanden*/
+    --back: ; /* achterwand (middel) */
+    --edge: url(../images/10637-NMQKXB.jpg);      /* De kleur van de vloer en het plafond */
+    /* fullscreened de hele canvas */
+    --room-w: 100vw;
+    --room-h: 100svh;
+    /* Zo de illusie van 3d kamer zich verbetert */
+    --inner-w: calc(var(--room-w) * 0.92);
+    --inner-h: calc(var(--room-h) * 0.86);
+    /* diepte van het effect naar de kamer, ik zou het gwoon zo laten. (groter = dieper) */
+    --depth:   calc(min(var(--room-w), var(--room-h)) * 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  html{ height:100%; }
+  /* wat positie dingen, niks belangrijks om verder aan te passen */
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center; 
+    background:#fff;
+  }
+
+  
+
+  .room{
+    position:fixed;
+    inset:0; /* Altijd 0px margin overal */
+    width:var(--room-w);
+    height:var(--room-h);
+    /* Perspectief dingen, zorgt ervoor dat het perspectief klopt naar elk grootte scherm (hoop ik) */
+    perspective: calc(min(var(--room-w), var(--room-h)) * 0.70);
+    display:grid;
+    place-items:center;
+  }
+
+  /* de container naar 3d effects */
+  .space{
+    position:relative;
+    width:var(--room-w);
+    height:var(--room-h);
+    transform-style: preserve-3d;
+  }
+
+  /* Zijwanden */
+  .face{ position:absolute; top:50%; left:50%; display:block; }
+  /* druk de frames tegen de randen zodat er geen gap naast de kamer is */
+  .space::before,
+  .space::after{ content:""; position:fixed; inset:0; }
+
+  /* laat de objecten zeker tranformen */
+  .wall-left, .wall-right, .ceiling, .floor, .back{ will-change: transform; }
+
+  /* Middenscherm, waar de main content op komt te staan */
+  .back{
+    width:126%;
+    height:110.5%;
+    background:var(--back);
+    display:grid; 
+    place-items:center; 
+    /* maakt de center exact in het midden, ook plaats die het middenscherm iets naar voren */
+    transform: translate(-45%, -41%) translateZ(calc(-1 * var(--depth)));
+  }
+
+  /* Zijwanden, spreekt voor zichzelf */
+  .wall-left{
+    width:var(--depth);
+    height:var(--inner-h);
+    background:var(--wall);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateX(calc(-1 * var(--inner-w) / 2)) rotateY(90deg);
+  }
+  .wall-right{
+    width:var(--depth);
+    height:var(--inner-h);
+    background:var(--wall);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateX(calc(var(--inner-w) / 2)) rotateY(-90deg);
+  }
+
+  /* Plafond en vloer, spreekt ook voor zichzelf */
+  .ceiling{
+    width:var(--inner-w);
+    height:var(--depth);
+    background:var(--edge);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateY(calc(-1 * var(--inner-h) / 2)) rotateX(-90deg);
+  }
+  .floor{
+    width:var(--inner-w);
+    height:var(--depth);
+    background:var(--edge);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateY(calc(var(--inner-h) / 2)) rotateX(90deg);
+  }
+
+/* midden item changer */
+  .back{
+    /* change inset for the exact placement of your image */
+    /* my example is a bit glitchy, since I never made it always be in the middle by translate()*/  
+    inset: 43% 43%;
+    background:var(--back);
+    display:grid;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  body {
+    animation: rotate-bg-color 3s infinite;
+  }
+  
+  @keyframes rotate-bg-color {
+    0% {
+      background-color: steelblue;
+    }
+    10% {
+      background-color: rgb(47, 0, 255);
+    }
+    20% {
+      background-color: rgb(21, 0, 255);
+    }
+    30% {
+      background-color: yellow;
+    }
+    40% {
+      background-color: green;
+    }
+    50% {
+      background-color: blue;
+    }
+    60% {
+      background-color: indigo;
+    }
+    70% {
+      background-color: violet;
+    }
+    80% {
+      background-color: pink;
+    }
+    90% {
+      background-color: brown;
+    }
+    100% {
+      background-color: black;
+    }
+  }
