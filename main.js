@@ -36,6 +36,10 @@ const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: TH
 const segmentLength = 10;
 const numSegments = 10;
 
+// setyp raycasting
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
 for (let i = 0; i < numSegments; i++) {
   const z = -i * segmentLength;
 
@@ -73,7 +77,20 @@ for (let i = 0; i < numSegments; i++) {
 
     door.position.set(-1.9, 1.5, z + segmentLength / 2);
     door.rotation.y = Math.PI / 2;
+ 
+    function onMouseClick(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+    
+      const intersects = raycaster.intersectObjects(scene.children);
+    
+      if (intersects.length > 0 && intersects[0].object === door) {
+        openDoor()
+      }
+    }
 
+    window.addEventListener('click', onMouseClick);
     scene.add(door);
   }
 
@@ -83,6 +100,23 @@ for (let i = 0; i < numSegments; i++) {
     const door = new THREE.Mesh(doorGeometry, doorMaterial);
     door.position.set(1.9, 1.5, z + segmentLength / 2);
     door.rotation.y = -Math.PI / 2;
+
+
+    function onMouseClick(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children);
+    
+      // If door was clicked
+      if (intersects.length > 0 && intersects[0].object === door) {
+        console.log("Door clicked!");
+      }
+    }
+
+    window.addEventListener('click', onMouseClick);
+
     scene.add(door);
   }
 
@@ -95,6 +129,8 @@ for (let i = 0; i < numSegments; i++) {
   ceiling.position.set(0, 3, z);
   scene.add(ceiling);
 }
+
+
 
 // front wall
 const frontWall = new THREE.Mesh(
