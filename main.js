@@ -41,6 +41,7 @@ const numSegments = 10;
 
 const door_urls = [
   "./rooms/red_room/red_room.html", 
+  "./rooms/wobly_room/wobly_room.html",
 ];
 
 function openDoor(door) {

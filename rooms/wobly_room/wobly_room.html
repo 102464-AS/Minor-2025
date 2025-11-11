@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kunst – CSS Kamer</title>
+  <link rel="stylesheet" href="css/room_placeholder.css">
+</head>
+<body>
+    <button id="lightBtn" class="light-btn" type="button" aria-pressed="false">Klik Hier</button>
+  <div class="room" aria-label="Kamer perspectief (3D)">
+    <div class="space">
+      <div class="ceiling face"></div>
+      <div class="floor face"></div>
+      <div class="wall-left face"></div>
+      <div class="wall-right face"></div>
+      <div class="back placeholder_image face"></div>
+        <!-- Center spotlight -->
+        <div class="spotlight" aria-hidden="true">
+          <div class="spotlight__beam"></div>
+          <div class="spotlight__floor-glow"></div>
+        </div>
+    </div>
+  </div>
+    <script src="java.js" defer></script>
+</body>
+</html>
