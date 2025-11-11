@@ -1,6 +1,6 @@
 import * as THREE from "https://unpkg.com/three@0.161.0/build/three.module.js";
 
-// Scene setup
+// Scen setup
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
@@ -11,21 +11,20 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 1.6, 5);
 
-
+// add textures
 const textureLoader = new THREE.TextureLoader();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Lighting
+//  add ligthing
 const ambient = new THREE.AmbientLight(0xffffff, 0.8);
 const pointLight = new THREE.PointLight(0xffffff, 0.6);
 pointLight.position.set(0, 2, 2);
 scene.add(ambient, pointLight);
 
-// Materials
+// setup metarilas
 const wallTexture = textureLoader.load('images/wall.jpg');
-// const backroom_wallTexture = textureLoader.load('images/backrooms.png');
 const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture });
 const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc2a475 });
 const ceilingTexture = textureLoader.load('images/ceiling2.jpeg');
@@ -33,7 +32,7 @@ const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
 const doorTexture = textureLoader.load('images/door.png');
 const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: THREE.DoubleSide });
 
-// Corridor segments
+
 const segmentLength = 10;
 const numSegments = 10;
 
@@ -110,45 +109,40 @@ const backWall = new THREE.Mesh(
   new THREE.PlaneGeometry(4, 3),
   wallMaterial
 );
-// place the back wall slightly forward so it's closer to the corridor walls/segments
 backWall.position.set(0, 1.5, -numSegments * segmentLength + segmentLength / 2);
 scene.add(backWall);
 
-// Movement controls
+// Movement
 const keys = { w: false, s: false };
+
 document.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "w") keys.w = true;
   if (e.key.toLowerCase() === "s") keys.s = true;
-  // coliding with back wall
+
+  // collision back wall
   if (camera.position.z <= -numSegments * segmentLength + segmentLength -2.9 && keys.w) {
     keys.w = false;
   }
 
-  // coliding with front wall
+  // collision front wall
   if (camera.position.z >= segmentLength / 2 -2.9 && keys.s) {
     keys.s = false;
   }
 });
+
 document.addEventListener("keyup", (e) => {
   if (e.key.toLowerCase() === "w") keys.w = false;
   if (e.key.toLowerCase() === "s") keys.s = false;
 });
 
-// Animation loop
+
 function animate() {
   requestAnimationFrame(animate);
 
-  // Move camera
   if (keys.w) camera.position.z -= 0.1; 
   if (keys.s) camera.position.z += 0.1; 
 
   renderer.render(scene, camera);
 }
-animate();
 
-// Resize handling
-window.addEventListener("resize", () => {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-});
+animate();
