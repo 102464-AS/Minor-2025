@@ -1,0 +1,171 @@
+/* JA, IK HEB VAR GEBRUIKT, WEET IK. HET WAS DE MANIER DIE IK HEB GEVONDEN DAT WEL NORMAAL WERKTE 🙏*/
+
+/* Voor de zijwanden, plafond en vloer, kan je nog niks duidelijk erop neerzetten. Als het nodig is moet ik daar er even naar kijken. */
+
+:root{
+    --wall: #d34242;     /* De kleur van de zijwanden*/
+    --back: #222222;   /* achterwand (middel) */
+    --edge: #222222;     /* De kleur van de vloer en het plafond */
+    /* fullscreened de hele canvas */
+    --room-w: 100vw;
+    --room-h: 100svh;
+    /* Zo de illusie van 3d kamer zich verbetert */
+    --inner-w: calc(var(--room-w) * 0.92);
+    --inner-h: calc(var(--room-h) * 0.86);
+    /* diepte van het effect naar de kamer, ik zou het gwoon zo laten. (groter = dieper) */
+    --depth:   calc(min(var(--room-w), var(--room-h)) * 0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  html{ 
+    height:100%; 
+    margin:0;
+  }
+  /* wat positie dingen, niks belangrijks om verder aan te passen */
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center; 
+    background:#fff;
+  }
+
+  .room{
+    position:fixed;
+    inset:0; /* Altijd 0px margin overal */
+    width:var(--room-w);
+    height:var(--room-h);
+    /* Perspectief dingen, zorgt ervoor dat het perspectief klopt naar elk grootte scherm (hoop ik) */
+    perspective: calc(min(var(--room-w), var(--room-h)) * 0.70);
+    display:grid;
+    place-items:center;
+  }
+
+  /* de container naar 3d effects */
+  .space{
+    position:relative;
+    width:var(--room-w);
+    height:var(--room-h);
+    transform-style: preserve-3d;
+  }
+
+  /* Zijwanden */
+  .face{ position:absolute; top:50%; left:50%; display:block; }
+  /* druk de frames tegen de randen zodat er geen gap naast de kamer is */
+  .space::before,
+  .space::after{ content:""; position:fixed; inset:0; }
+
+  /* laat de objecten zeker tranformen */
+  .wall-left, .wall-right, .ceiling, .floor, .back{ will-change: transform; }
+
+  /* Middenscherm, waar de main content op komt te staan */
+  .back{
+    width:126%;
+    height:110.5%;
+    background:var(--back);
+    display:grid; 
+    place-items:center; 
+    /* maakt de center exact in het midden, ook plaats die het middenscherm iets naar voren */
+    transform: translate(-45%, -41%) translateZ(calc(-1 * var(--depth)));
+  }
+
+  /* Zijwanden, spreekt voor zichzelf */
+  .wall-left{
+    width:var(--depth);
+    height:var(--inner-h);
+    background:var(--wall);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateX(calc(-1 * var(--inner-w) / 2)) rotateY(90deg);
+  }
+  .wall-right{
+    width:var(--depth);
+    height:var(--inner-h);
+    background:var(--wall);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateX(calc(var(--inner-w) / 2)) rotateY(-90deg);
+  }
+
+  /* Plafond en vloer, spreekt ook voor zichzelf */
+  .ceiling{
+    border: 80px solid #d34242;
+    width:var(--inner-w);
+    height:var(--depth);
+    background:var(--edge);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateY(calc(-1 * var(--inner-h) / 2)) rotateX(-90deg);
+  }
+  .floor{
+    border: 80px solid #d34242;
+    width:var(--inner-w);
+    height:var(--depth);
+    background:var(--edge);
+    transform-origin: center;
+    transform: translate(-50%, -50%) translateY(calc(var(--inner-h) / 2)) rotateX(90deg);
+  }
+
+ 
+/* midden item changer */
+  .back{
+    /* change inset for the exact placement of your image */
+    /* my example is a bit glitchy, since I never made it always be in the middle by translate()*/  
+    inset:40% 43%;
+    background:var(--back);
+    display:grid;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-top: 48px solid #d34242;
+    border-bottom: 48px solid #d34242;
+  }
+
+
+
+ 
+.bar{
+  position: absolute;
+  top: -30%;
+  left: -60vw;
+    width:200vw;
+    height:30px;
+    border-radius:60px;
+    background:linear-gradient(90deg, rgba(255,26,26,0.12), rgba(255,26,26,0.28), rgba(255,26,26,0.12));
+    filter:blur(4px);
+    box-shadow:0 0 30px rgba(255, 90, 90, 3), inset 0 0 40px rgba(255,26,26,0.4);
+    position:relative;
+    overflow:hidden
+  }
+
+  .bar::after{
+    content:'';
+    position:absolute;
+    left:-1%;
+    top:50%;
+    transform:translateY(-50%);
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,30,30,0.9), rgba(255,0,0,0.15));
+    filter:blur(14px);
+    animation:travel 6s linear infinite;
+  }
+
+  @keyframes travel{
+    0%{left:-50%;opacity:50%}
+    8%{opacity:1}
+    92%{opacity:1}
+    100%{left:110%;opacity:0}
+  }
+
+.painting-grid {
+  position: fixed;
+  top: 30%;
+  gap: 60px;
+  justify-content: center;
+  align-items: center;     
+  margin: 0;  
+}
+
+img {
+  display: block;
+  margin: auto;
+}

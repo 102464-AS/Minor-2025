@@ -40,11 +40,7 @@ const segmentLength = 10;
 const numSegments = 10;
 
 const door_urls = [
-  "https://google.com",
-  "https://wikipedia.org",
-  "https://github.com",
-  "https://stackoverflow.com",
-  "https://news.ycombinator.com"
+  "./rooms/red_room/red_room.html", 
 ];
 
 function openDoor(door) {
