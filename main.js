@@ -36,6 +36,19 @@ const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: TH
 const segmentLength = 10;
 const numSegments = 10;
 
+const door_urls = [
+  "google.com",
+  "yahoo.com",
+  "bing.com",
+  "duckduckgo.com",
+  "ask.com",
+];
+
+function openDoor(door) {
+  const url = door_urls[Math.floor(Math.random() * door_urls.length)];
+  console.log("Opening door to: " + url);
+}
+
 // setyp raycasting
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -74,6 +87,7 @@ for (let i = 0; i < numSegments; i++) {
   if (i % 1 === 0) {
     const doorGeometry = new THREE.PlaneGeometry(2, 3); 
     const door = new THREE.Mesh(doorGeometry, doorMaterial);
+    door.name = "door_" + i + "_left";
 
     door.position.set(-1.9, 1.5, z + segmentLength / 2);
     door.rotation.y = Math.PI / 2;
@@ -86,7 +100,7 @@ for (let i = 0; i < numSegments; i++) {
       const intersects = raycaster.intersectObjects(scene.children);
     
       if (intersects.length > 0 && intersects[0].object === door) {
-        openDoor()
+        openDoor(door)
       }
     }
 
@@ -111,7 +125,7 @@ for (let i = 0; i < numSegments; i++) {
     
       // If door was clicked
       if (intersects.length > 0 && intersects[0].object === door) {
-        console.log("Door clicked!");
+        openDoor(door)
       }
     }
 
