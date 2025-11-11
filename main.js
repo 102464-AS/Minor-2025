@@ -11,7 +11,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 1.6, 5);
 
-// add textures
+//  setup renderer
 const textureLoader = new THREE.TextureLoader();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
@@ -26,9 +26,12 @@ scene.add(ambient, pointLight);
 // setup metarilas
 const wallTexture = textureLoader.load('images/wall.jpg');
 const wallMaterial = new THREE.MeshStandardMaterial({ map: wallTexture });
+
 const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc2a475 });
+
 const ceilingTexture = textureLoader.load('images/ceiling2.jpeg');
 const ceilingMaterial = new THREE.MeshStandardMaterial({ map: ceilingTexture });
+
 const doorTexture = textureLoader.load('images/door.png');
 const doorMaterial = new THREE.MeshStandardMaterial({ map: doorTexture, side: THREE.DoubleSide });
 
@@ -37,16 +40,18 @@ const segmentLength = 10;
 const numSegments = 10;
 
 const door_urls = [
-  "google.com",
-  "yahoo.com",
-  "bing.com",
-  "duckduckgo.com",
-  "ask.com",
+  "https://google.com",
+  "https://wikipedia.org",
+  "https://github.com",
+  "https://stackoverflow.com",
+  "https://news.ycombinator.com"
 ];
 
 function openDoor(door) {
   const url = door_urls[Math.floor(Math.random() * door_urls.length)];
   console.log("Opening door to: " + url);
+
+  window.location.href = url;
 }
 
 // setyp raycasting
