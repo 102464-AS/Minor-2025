@@ -280,3 +280,20 @@
     --line-wall: hsl(calc(var(--spot-hue) + 60) 70% 45% / 0.55);
     --line-edge: hsl(calc(var(--spot-hue) + 200) 60% 48% / 0.45);
   }
+
+  .back-button {
+    border: 5px outset #FAF9F6;
+    background-color: white;
+    color: black !important;
+    font-size: 30px;
+    padding: 6px;
+    cursor: pointer;
+    z-index: 9999;
+    position: fixed;
+    bottom: 0;
+    width: 100px;
+    left: calc(50%- 100px);
+    text-align: center;
+    text-decoration: none;
+    color: white;
+  }
